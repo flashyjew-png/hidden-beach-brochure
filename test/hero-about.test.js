@@ -11,7 +11,7 @@ test('settings with name, banner and about render as hero + about', () => {
       about: 'Barefoot beach bar on Koh Mak.',
     }),
   });
-  assert.deepEqual(v.ids, ['hero', 'about']);
+  assert.deepEqual(v.ids.slice(0, 2), ['hero', 'about']);
   assert.match(v.section('hero'), /<h1[^>]*>Hidden Beach<\/h1>/);
   assert.match(v.section('hero'), /class="banner"[^>]*>Live music tonight</);
   assert.match(v.section('about'), /<p>Barefoot beach bar on Koh Mak\.<\/p>/);
@@ -27,14 +27,15 @@ test('empty banner cell → no banner element', () => {
 
 test('empty about cell → no about section', () => {
   const v = view({ settings: settingsCsv({ business_name: 'Hidden Beach', status_banner: 'Open', about: '  ' }) });
-  assert.deepEqual(v.ids, ['hero']);
+  assert.deepEqual(v.ids.slice(0, 1), ['hero']);
+  assert.ok(!v.ids.includes('about'));
   assert.doesNotMatch(v.html, /id="about"/);
 });
 
-test('missing settings → nothing rendered, no crash', () => {
+test('missing settings → no hero or about, no crash', () => {
   const v = view({});
-  assert.deepEqual(v.ids, []);
-  assert.equal(v.html, '');
+  assert.ok(!v.ids.includes('hero') && !v.ids.includes('about'));
+  assert.doesNotMatch(v.html, /id="hero"|id="about"/);
 });
 
 test('quoted commas, quotes and line breaks in cells parse correctly', () => {
@@ -50,7 +51,7 @@ test('quoted commas, quotes and line breaks in cells parse correctly', () => {
 test('blank rows and LF-only line endings are ignored', () => {
   const text = 'key,en,th,de\n\n,,,\nbusiness_name,Hidden Beach,,\n\nabout,Hello,,';
   const v = view({ settings: text });
-  assert.deepEqual(v.ids, ['hero', 'about']);
+  assert.deepEqual(v.ids.slice(0, 2), ['hero', 'about']);
   assert.match(v.section('about'), /Hello/);
 });
 

@@ -73,3 +73,18 @@ p { margin: 0 0 12px; }
 
 /* About */
 .about p { color: var(--text); }
+
+/* Menus (cocktails, food) */
+.menu-group + .menu-group { margin-top: 20px; }
+.menu-group__title { font-size: 1.1rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+.menu-items { list-style: none; margin: 0; padding: 0; }
+.menu-item { padding: 10px 0; }
+.menu-item + .menu-item { border-top: 1px dashed color-mix(in srgb, var(--muted) 30%, transparent); }
+.menu-item__head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.menu-item__name { margin: 0; font: 600 1rem/1.3 var(--font-body); }
+.price { font-weight: 700; color: var(--accent); white-space: nowrap; }
+.menu-item__desc { margin: 4px 0 0; color: var(--muted); font-size: 0.95rem; }
+.tags { list-style: none; display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0 0; padding: 0; }
+.tag { font-size: 0.75rem; padding: 2px 8px; border-radius: 999px; background: color-mix(in srgb, var(--accent) 15%, transparent); color: var(--accent); }
+.tag--spicy { background: color-mix(in srgb, var(--highlight) 18%, transparent); color: var(--highlight); }
+.coming-soon { font-style: italic; color: var(--muted); }
