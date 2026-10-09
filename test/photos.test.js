@@ -121,3 +121,32 @@ test('photo URLs and alt text are HTML-escaped', () => {
   assert.doesNotMatch(html, /onerror="/);
   assert.match(html, /alt="&quot;Tiki&quot; &lt;Mule&gt;"/);
 });
+
+// Photos × languages (#4 × #7): alt text follows the rendered language, English where untranslated
+
+test('in TH, photo alt text uses the Thai name/title, falling back to English', () => {
+  const v = view(
+    {
+      settings: settingsCsv({
+        business_name: { en: 'Hidden Beach', th: 'หิดเดนบีช' },
+        logo_url: 'https://example.com/logo.png',
+        hero_photo: 'https://example.com/beach.jpg',
+      }),
+      menu: csv(
+        MENU_HEAD,
+        ['cocktails', 'Signatures', 'Mojito', 'โมจิโต้', '', 'Rum', '', '', '200', 'https://example.com/m.jpg', '', 'yes'],
+        ['cocktails', 'Signatures', 'Negroni', '', '', 'Gin', '', '', '250', 'https://example.com/n.jpg', '', 'yes'],
+      ),
+      specials: csv(
+        SPECIALS_HEAD,
+        ['Happy hour', 'แฮปปี้ฮาวร์', '', '2-for-1', '', '', 'Daily', 'https://example.com/h.jpg', 'yes'],
+        ['Live music', '', '', 'Acoustic', '', '', 'Fri', 'https://example.com/l.jpg', 'yes'],
+      ),
+    },
+    { lang: 'th', today: new Date('2026-10-09T12:00:00+07:00') },
+  );
+  assert.equal(v.lang, 'th');
+  assert.deepEqual(imgs(v.section('hero')).map(alt), ['หิดเดนบีช', 'หิดเดนบีช']);
+  assert.deepEqual(imgs(v.section('cocktails')).map(alt), ['โมจิโต้', 'Negroni']);
+  assert.deepEqual(imgs(v.section('specials')).map(alt), ['แฮปปี้ฮาวร์', 'Live music']);
+});

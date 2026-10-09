@@ -23,14 +23,52 @@ function browserStorage() {
   }
 }
 
+export const LANG_KEY = 'hiddenbeach:lang';
+
+/** The visitor's remembered language, default 'en'. Never throws. */
+function readLang(storage) {
+  try {
+    return storage?.getItem(LANG_KEY) || 'en';
+  } catch {
+    return 'en';
+  }
+}
+
+/** Best-effort: remember the visitor's language choice. */
+function saveLang(storage, lang) {
+  try {
+    storage?.setItem(LANG_KEY, lang);
+  } catch {
+    /* storage unavailable: the choice lasts for this page view only */
+  }
+}
+
 async function main() {
-  const lang = 'en';
+  const storage = browserStorage();
+  let lang = readLang(storage);
+  let lastCsv = null;
+  // The renderer falls back to 'en' when the chosen language has no content (yet); paint() then
+  // sets <html lang> to what was actually rendered.
+  const repaint = () => paint(document, renderFromCsv(lastCsv, { lang, today: new Date() }));
+
+  // The switcher is rendered by the renderer; a click re-renders the current content in that language.
+  document.getElementById('app').addEventListener('click', (event) => {
+    const button = event.target.closest?.('[data-lang]');
+    if (!button || !lastCsv) return;
+    lang = button.dataset.lang;
+    saveLang(storage, lang);
+    repaint();
+  });
+
   // Cached content paints instantly, fresh Sheet data repaints when it arrives; with neither,
   // the built-in fallback (name, Maps, WhatsApp) paints instead of a blank page.
   const result = await loadContent({
-    storage: browserStorage(),
+    storage,
     // `today` is the current instant; the renderer reads its weekday in Asia/Bangkok.
-    onContent: (csv) => paint(document, renderFromCsv(csv, { lang, today: new Date() })),
+    onContent: (csv) => {
+      lastCsv = csv;
+      repaint();
+    },
   });
   if (result.error) console.error(`Brochure content failed to load; showing ${result.source}`, result.error);
 }
