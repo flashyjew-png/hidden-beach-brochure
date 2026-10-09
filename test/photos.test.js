@@ -40,13 +40,20 @@ test('empty special photo → special has no image', () => {
   assert.doesNotMatch(html, /photo|placeholder/);
 });
 
-// Filled photo cells → lazy image with alt text
+// Filled photo cells → image with alt text; above-the-fold logo/hero load eagerly, the rest lazily
 
-test('hero photo renders as a lazy image with the business name as alt', () => {
+test('hero photo renders as an eager, high-priority image with the business name as alt', () => {
   const [img] = imgs(heroWith({ hero_photo: 'https://example.com/beach.jpg' }));
   assert.equal(src(img), 'https://example.com/beach.jpg');
   assert.equal(alt(img), 'Hidden Beach');
-  assert.match(img, /loading="lazy"/);
+  assert.match(img, /loading="eager"/);
+  assert.match(img, /fetchpriority="high"/);
+});
+
+test('logo image loads eagerly with high priority', () => {
+  const [img] = imgs(heroWith({ logo_url: 'https://example.com/logo.png' }));
+  assert.match(img, /loading="eager"/);
+  assert.match(img, /fetchpriority="high"/);
 });
 
 test('menu item photo renders as a lazy image with the item name as alt', () => {
@@ -54,6 +61,7 @@ test('menu item photo renders as a lazy image with the item name as alt', () => 
   assert.equal(src(img), 'https://example.com/mule.jpg');
   assert.equal(alt(img), 'Sunset Mule');
   assert.match(img, /loading="lazy"/);
+  assert.doesNotMatch(img, /fetchpriority/);
 });
 
 test('special photo renders as a lazy image with the special title as alt', () => {
@@ -61,6 +69,7 @@ test('special photo renders as a lazy image with the special title as alt', () =
   assert.equal(src(img), 'https://example.com/sunset.jpg');
   assert.equal(alt(img), 'Happy hour');
   assert.match(img, /loading="lazy"/);
+  assert.doesNotMatch(img, /fetchpriority/);
 });
 
 // Drive share links → embeddable URL
@@ -93,6 +102,22 @@ test('plain https image URL passes through unchanged (query string intact, escap
   const [img] = imgs(menuWith(url));
   assert.equal(src(img), url.replace('&', '&amp;'));
 });
+
+// Unsafe URLs → no image
+
+const UNSAFE = ['javascript:alert(1)', ' JavaScript:alert(1)', 'data:image/svg+xml,<svg onload=alert(1)>', 'vbscript:x', '//evil.example/x.jpg', 'beach.jpg'];
+
+for (const url of UNSAFE) {
+  test(`unsafe photo URL ${JSON.stringify(url)} → no image in hero, logo, menu or specials`, () => {
+    const hero = heroWith({ hero_photo: url, logo_url: url });
+    assert.deepEqual(imgs(hero), []);
+    assert.match(hero, /logo--text">Hidden Beach</);
+    for (const html of [menuWith(url), specialWith(url)]) {
+      assert.deepEqual(imgs(html), []);
+      assert.doesNotMatch(html, /javascript|data:|vbscript|evil/i);
+    }
+  });
+}
 
 // Logo
 

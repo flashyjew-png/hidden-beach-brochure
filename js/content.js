@@ -2,29 +2,43 @@
 
 const ESCAPES = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
 
-/** Escape Sheet text for HTML text and attribute positions. ALWAYS use on Sheet values. */
+/** Escape for HTML text and attributes. Use on every Sheet value. */
 export function esc(value) {
   return String(value ?? '').replace(/[&<>"']/g, (c) => ESCAPES[c]);
 }
 
-/** A row is visible only when its `show` cell is "yes" (case-insensitive). */
+/** http(s) URLs only; javascript:, data: etc. → ''. */
+export function safeUrl(value) {
+  const url = String(value ?? '').trim();
+  return /^https?:\/\//i.test(url) ? url : '';
+}
+
+/** Blank-line-separated paragraphs → <p>, other newlines → <br>. */
+export function paragraphs(text) {
+  return text
+    .split(/\n\s*\n/)
+    .map((p) => p.trim())
+    .filter(Boolean)
+    .map((p) => `<p>${esc(p).replace(/\n/g, '<br>')}</p>`)
+    .join('');
+}
+
+/** <section> with an <h2> heading. */
+export function section(id, heading, body, cls = id) {
+  return `<section class="section ${cls}" id="${id}"><h2>${esc(heading)}</h2>${body}</section>`;
+}
+
+/** A row is visible only when its `show` cell is "yes". */
 export function isShown(row) {
   return String(row?.show ?? '').trim().toLowerCase() === 'yes';
 }
 
-/**
- * Pick a row's text for the current language: `${base}_${lang}`, falling back to `${base}_en`.
- * Works for Menu (name_en, desc_th…) and Specials (title_en, detail_de…).
- */
+/** `${base}_${lang}` cell, falling back to `${base}_en`. */
 export function pick(row, base, lang) {
   return (row?.[`${base}_${lang}`] || row?.[`${base}_en`] || '').trim();
 }
 
-/**
- * Build the context every section builder receives.
- * @param {{settings?:object[], hours?:object[], menu?:object[], specials?:object[]}} tabs parsed rows
- * @param {{lang?:string, today?:Date}} opts
- */
+/** The context every section builder receives. */
 export function makeContext(tabs = {}, opts = {}) {
   const lang = opts.lang || 'en';
   const today = opts.today instanceof Date ? opts.today : new Date();
@@ -34,19 +48,12 @@ export function makeContext(tabs = {}, opts = {}) {
     if (key && !settingsByKey.has(key)) settingsByKey.set(key, row);
   }
 
-  /** Settings text for `key` in the current language (falls back to en, then `fallback`). Unescaped. */
+  /** Unescaped Settings text: current language, else en, else `fallback`. */
   function setting(key, fallback = '') {
     const row = settingsByKey.get(key.toLowerCase());
     return (row?.[lang] || row?.en || '').trim() || fallback;
   }
 
-  return {
-    lang,
-    today,
-    setting,
-    settingsRows: tabs.settings ?? [],
-    hours: tabs.hours ?? [],
-    menu: tabs.menu ?? [],
-    specials: tabs.specials ?? [],
-  };
+  const { settings = [], hours = [], menu = [], specials = [] } = tabs;
+  return { lang, today, setting, settingsRows: settings, hours, menu, specials };
 }

@@ -1,13 +1,5 @@
-// The content renderer: the single test seam. Pure — no DOM, no fetch, no storage.
-//
-// render(tabs, opts) takes parsed tab rows and returns the visitor-visible content:
-//   { lang, languages, title, sections: [{ id, html }], html }
-// `lang` is the language actually rendered: a requested th/de with no content yet renders as en.
-// `languages` lists what the switcher offers (['en'] alone → no switcher).
-// A section builder returning '' (no content) is omitted entirely.
-//
-// To add a section: create js/sections/<name>.js exporting `(ctx) => htmlString`
-// and add it to SECTIONS in page order (spec #1 "Section order").
+// The content renderer and the test seam. Pure: no DOM, fetch or storage.
+// Sections are (ctx) => html in page order; '' omits the section.
 
 import { parseTabs } from './csv.js';
 import { makeContext } from './content.js';
@@ -20,32 +12,18 @@ import { findUs } from './sections/find-us.js';
 import { whatsapp } from './sections/whatsapp.js';
 import { languageSwitcher, availableLanguages } from './sections/language.js';
 
-/** Page order. Each entry: [section id, builder(ctx) → html string ('' = omit)]. */
-export const SECTIONS = [
-  ['language', languageSwitcher],
-  ['hero', hero],
-  ['about', about],
-  ['cocktails', cocktails],
-  ['food', food],
-  ['specials', specials],
-  ['activities', activities],
-  ['find-us', findUs],
-  ['whatsapp', whatsapp],
-];
+const SECTIONS = {
+  language: languageSwitcher, hero, about, cocktails, food, specials, activities, 'find-us': findUs, whatsapp,
+};
 
-/**
- * @param {{settings?:object[], hours?:object[], menu?:object[], specials?:object[]}} tabs parsed rows per tab
- * @param {{lang?:string, today?:Date}} [opts]
- */
+/** `lang` in the result is what rendered: untranslated th/de → en. */
 export function render(tabs = {}, opts = {}) {
   let ctx = makeContext(tabs, opts);
   const languages = availableLanguages(ctx);
   if (!languages.includes(ctx.lang)) ctx = makeContext(tabs, { ...opts, lang: 'en' });
-  const sections = [];
-  for (const [id, build] of SECTIONS) {
-    const html = build(ctx);
-    if (html) sections.push({ id, html });
-  }
+  const sections = Object.entries(SECTIONS)
+    .map(([id, build]) => ({ id, html: build(ctx) }))
+    .filter((s) => s.html);
   return {
     lang: ctx.lang,
     languages,
@@ -55,7 +33,7 @@ export function render(tabs = {}, opts = {}) {
   };
 }
 
-/** Same as render(), but from raw CSV text per tab: `{settings: '...csv', hours: '...', ...}`. */
+/** render() from raw CSV text per tab. */
 export function renderFromCsv(csvByTab = {}, opts = {}) {
   return render(parseTabs(csvByTab), opts);
 }

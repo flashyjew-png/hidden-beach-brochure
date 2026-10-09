@@ -6,9 +6,10 @@ import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import { readFileSync, readdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import { TABS } from '../js/config.js';
-import { parseCsv } from '../js/csv.js';
 import { view } from './helpers.js';
+
+/** Tab key → Sheet tab name: the tabs the site fetches (js/config.js). */
+const TABS = { settings: 'Settings', hours: 'Hours', menu: 'Menu', specials: 'Specials' };
 
 const root = (p) => fileURLToPath(new URL(`../${p}`, import.meta.url));
 
@@ -34,7 +35,18 @@ function settingKeysInCode() {
   return [...keys].sort();
 }
 
-const fixture = (tab) => parseCsv(readFileSync(root(`fixtures/${tab}.csv`), 'utf8'));
+/** Fixture CSV → records. Test-local reader: quoted fields may hold commas, newlines and "". */
+function fixture(tab) {
+  const records = [[]];
+  const field = /("(?:[^"]|"")*"|[^,\r\n]*)(,|\r?\n|$)/g;
+  const text = readFileSync(root(`fixtures/${tab}.csv`), 'utf8');
+  for (let m; (m = field.exec(text)) && m.index < text.length; ) {
+    const v = m[1].startsWith('"') ? m[1].slice(1, -1).replace(/""/g, '"') : m[1];
+    records.at(-1).push(v);
+    if (m[2] && m[2] !== ',') records.push([]);
+  }
+  return records.filter((r) => r.some((c) => c !== ''));
+}
 
 test('the template has exactly the tabs the site fetches', { skip }, () => {
   assert.deepEqual(Object.keys(template), Object.values(TABS));
