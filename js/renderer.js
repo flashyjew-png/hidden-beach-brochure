@@ -12,6 +12,8 @@ import { makeContext } from './content.js';
 import { hero } from './sections/hero.js';
 import { about } from './sections/about.js';
 import { cocktails, food } from './sections/menu.js';
+import { specials } from './sections/specials.js';
+import { activities } from './sections/activities.js';
 
 /** Page order. Each entry: [section id, builder(ctx) → html string ('' = omit)]. */
 export const SECTIONS = [
@@ -19,7 +21,9 @@ export const SECTIONS = [
   ['about', about],
   ['cocktails', cocktails],
   ['food', food],
-  // specials, activities, find-us, whatsapp — added by later tickets
+  ['specials', specials],
+  ['activities', activities],
+  // find-us, whatsapp — added by later tickets
 ];
 
 /**
