@@ -73,3 +73,14 @@ p { margin: 0 0 12px; }
 
 /* About */
 .about p { color: var(--text); }
+
+/* Find us + WhatsApp (#6) — basic layout; polish in #9 */
+.open-today { margin: 12px 0 0; color: var(--muted); }
+.open-today__label { font-weight: 600; color: var(--text); }
+.button { display: inline-block; padding: 12px 18px; border-radius: 999px; background: var(--accent); color: var(--surface); font-weight: 600; text-decoration: none; }
+.rating-badge { display: inline-block; margin: 12px 0; font-weight: 600; }
+.hours { width: 100%; border-collapse: collapse; margin-top: 12px; }
+.hours caption { text-align: left; font-weight: 600; padding-bottom: 6px; }
+.hours th, .hours td { text-align: left; padding: 6px 4px; }
+.hours .is-today { font-weight: 700; }
+.whatsapp { text-align: center; }
