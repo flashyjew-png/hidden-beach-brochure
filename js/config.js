@@ -1,7 +1,7 @@
 // PASTE THE SHEET ID HERE: the code between /d/ and /edit in the Sheet's address.
 // The Sheet must be Published to web AND shared "Anyone with the link" (see README).
 // While empty, the site shows the sample content in fixtures/*.csv.
-export const SHEET_ID = '';
+export const SHEET_ID = '1-c8cqcceIAhbacIrv8yRPmw3pXaD-NZCIwp1k7mTelc';
 
 /** Tab key → Sheet tab name. */
 export const TABS = { settings: 'Settings', hours: 'Hours', menu: 'Menu', specials: 'Specials' };
