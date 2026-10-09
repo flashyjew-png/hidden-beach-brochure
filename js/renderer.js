@@ -1,7 +1,9 @@
 // The content renderer: the single test seam. Pure — no DOM, no fetch, no storage.
 //
 // render(tabs, opts) takes parsed tab rows and returns the visitor-visible content:
-//   { lang, title, sections: [{ id, html }], html }
+//   { lang, languages, title, sections: [{ id, html }], html }
+// `lang` is the language actually rendered: a requested th/de with no content yet renders as en.
+// `languages` lists what the switcher offers (['en'] alone → no switcher).
 // A section builder returning '' (no content) is omitted entirely.
 //
 // To add a section: create js/sections/<name>.js exporting `(ctx) => htmlString`
@@ -16,9 +18,11 @@ import { specials } from './sections/specials.js';
 import { activities } from './sections/activities.js';
 import { findUs } from './sections/find-us.js';
 import { whatsapp } from './sections/whatsapp.js';
+import { languageSwitcher, availableLanguages } from './sections/language.js';
 
 /** Page order. Each entry: [section id, builder(ctx) → html string ('' = omit)]. */
 export const SECTIONS = [
+  ['language', languageSwitcher],
   ['hero', hero],
   ['about', about],
   ['cocktails', cocktails],
@@ -34,7 +38,9 @@ export const SECTIONS = [
  * @param {{lang?:string, today?:Date}} [opts]
  */
 export function render(tabs = {}, opts = {}) {
-  const ctx = makeContext(tabs, opts);
+  let ctx = makeContext(tabs, opts);
+  const languages = availableLanguages(ctx);
+  if (!languages.includes(ctx.lang)) ctx = makeContext(tabs, { ...opts, lang: 'en' });
   const sections = [];
   for (const [id, build] of SECTIONS) {
     const html = build(ctx);
@@ -42,6 +48,7 @@ export function render(tabs = {}, opts = {}) {
   }
   return {
     lang: ctx.lang,
+    languages,
     title: ctx.setting('business_name', 'Hidden Beach'),
     sections,
     html: sections.map((s) => s.html).join('\n'),
