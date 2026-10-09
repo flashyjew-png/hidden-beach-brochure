@@ -10,12 +10,9 @@ A one-page website for the bar and restaurant at Hidden Beach Resort on Koh Mak.
 
 Do this once. It takes about 15 minutes.
 
-### 1. Turn the template into a Google Sheet
+### 1. The Google Sheet (done)
 
-1. In this repo, open `sheet-template` → `hidden-beach-brochure.xlsx` → **Download**.
-2. In the **Google Drive** app, tap **+** → **Upload** and pick the downloaded file.
-3. Open it in Google Sheets and choose **File → Save as Google Sheets**. In the phone app this is **⋮ → Share & export → Save as Google Sheets**. This makes a real Google Sheet. You can delete the uploaded `.xlsx` afterwards.
-4. Rename the Sheet to **Hidden Beach Brochure**.
+Your Sheet **Hidden beach brochure** is already set up with the Settings, Hours, Menu and Specials tabs and starter content, and the website is already pointed at it. (If you ever need to start over, `sheet-template/hidden-beach-brochure.xlsx` is a spare copy you can upload to Drive.)
 
 ### 2. Make the photos folder
 
@@ -33,16 +30,9 @@ You need to do **both** of these steps. If you only do one, the site can't read 
 
 The Google Sheets phone app doesn't have "Publish to web". Open the Sheet in your phone's browser at sheets.google.com and choose **Desktop site** from the browser menu.
 
-### 4. Paste the Sheet ID into the website
+### 4. The Sheet ID (done)
 
-1. Copy the Sheet's address. It looks like this:
-   `https://docs.google.com/spreadsheets/d/`**`1AbCdEf…XyZ`**`/edit`
-   The **Sheet ID** is the long code between `/d/` and `/edit`.
-2. On GitHub (in your phone's browser), open this repo → `js` → `config.js` → tap the **pencil** (Edit).
-3. Find this line near the top:
-   `export const SHEET_ID = '';`
-   Paste the ID between the quotes, like this: `export const SHEET_ID = '1AbCdEf…XyZ';`
-4. Tap **Commit changes**, then **Commit changes** again.
+The website already knows your Sheet's ID. You only need this if you ever switch to a different Sheet: copy the long code between `/d/` and `/edit` in the new Sheet's address, then on GitHub open `js` → `config.js` → pencil (Edit), paste it between the quotes in `export const SHEET_ID = '…';`, and tap **Commit changes**.
 
 ### 5. Put the website online (free)
 
@@ -56,6 +46,7 @@ The Google Sheets phone app doesn't have "Publish to web". Open the Sheet in you
 
 - **Changes take a few minutes to show up.** Google updates the published copy every few minutes. Wait, then refresh the page.
 - Type everything as plain text. Prices like `220`, times like `10:00–23:00` and phone numbers stay exactly as you type them.
+- **Starting a cell with `+`, `=` or `-`?** Put an apostrophe first, e.g. `'+66 81 234 5678`, or Google Sheets shows `#ERROR!`. The apostrophe doesn't appear on the site.
 - **Don't change the first row (the headers) or the tab names.** The website looks for those exact words.
 - A blank row is ignored, so you can leave gaps.
 
@@ -86,7 +77,7 @@ Each row is one setting. **key** says what it is (don't change it). **en** is th
 | activities | Short teaser about the beach, kayaking and diving |
 | rating | Google rating text, e.g. "4.8★ from 192 Google reviews". Update it now and then |
 | maps_url | Link for the "Open in Google Maps" button (see below) |
-| whatsapp_number | Your WhatsApp number with country code, e.g. +1 907 215 8419 |
+| whatsapp_number | Your WhatsApp number with country code, e.g. `'+1 907 215 8419` (start with an apostrophe because of the +) |
 | whatsapp_greeting | Message that's already filled in when a guest taps WhatsApp |
 | heading_… | Section titles (About us, Cocktails, Food, …) |
 | label_… | Button and table words (Open today, Bar, Kitchen, …) |
