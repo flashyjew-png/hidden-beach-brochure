@@ -1,0 +1,172 @@
+/* Hidden Beach brochure: mobile-first, rustic-tropical. Theme tokens on :root. */
+:root {
+  --bg: #efe2c8;
+  --surface: #f8f0e0;
+  --text: #1d2a29;
+  --muted: #5e5a4d;
+  --line: rgb(29 42 41 / 0.16);
+  --accent: #0e4f51;
+  --highlight: #d9472f;
+  --on-accent: #f8f0e0;
+  --on-highlight: #fff;
+  --sky-top: #f7ead2;
+  --sky-low: #f4b48a;
+  --sun: #ee6a45;
+  --sea: #1d6a6a;
+  --sea-deep: #0e4f51;
+  --gutter: 16px;
+  --font-body: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans Thai", sans-serif;
+  --font-display: ui-rounded, "SF Pro Rounded", "Arial Rounded MT Bold", Nunito, "Noto Sans Thai", system-ui, sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0c1e20;
+    --surface: #13292b;
+    --text: #efe2c8;
+    --muted: #b3ab97;
+    --line: rgb(239 226 200 / 0.14);
+    --accent: #7ccfc4;
+    --highlight: #ff8566;
+    --on-accent: #0c1e20;
+    --on-highlight: #240b05;
+    --sky-top: #0f3236;
+    --sky-low: #8a3f33;
+    --sun: #f07a52;
+    --sea: #11403f;
+    --sea-deep: #082022;
+  }
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 17px/1.6 var(--font-body); overflow-wrap: anywhere; }
+main { position: relative; max-width: 640px; margin: 0 auto; padding: 0 var(--gutter); }
+
+.section { padding: 32px 0; }
+.section + .section { border-top: 1px solid var(--line); }
+
+h1, h2, h3, h4 { margin: 0 0 12px; line-height: 1.2; }
+h1, h2, h3 { font-family: var(--font-display); font-weight: 800; }
+h2 { color: var(--accent); font-size: 1.65rem; letter-spacing: -0.01em; }
+h3 { font-size: 1.15rem; }
+p { margin: 0 0 12px; }
+p:last-child { margin-bottom: 0; }
+a:focus-visible, button:focus-visible { outline: 3px solid var(--highlight); outline-offset: 3px; }
+
+/* Hero: a CSS sunset over the sea until a hero photo is set */
+.hero {
+  position: relative; margin: 0 calc(-1 * var(--gutter)); padding: 44px var(--gutter) 28px; text-align: center;
+  background:
+    radial-gradient(circle at 50% 100%, var(--sun) 0 52px, transparent 53px) 0 0 / 100% 168px no-repeat,
+    linear-gradient(var(--sky-top), var(--sky-low) 168px, var(--sea) 168px, var(--sea-deep) 236px, var(--bg) 236px);
+}
+.hero::before { /* light on the water */
+  content: ""; position: absolute; top: 168px; left: calc(50% - 75px); width: 150px; height: 64px; opacity: 0.7;
+  background: repeating-linear-gradient(transparent 0 7px, color-mix(in srgb, var(--sun) 55%, transparent) 7px 10px);
+  clip-path: polygon(30% 0, 70% 0, 100% 100%, 0 100%);
+}
+.hero > * { position: relative; }
+.hero > .logo { margin-bottom: 152px; }
+.hero:has(.hero__photo) { background: none; padding-top: 24px; }
+.hero:has(.hero__photo)::before { display: none; }
+.hero:has(.hero__photo) > .logo { margin-bottom: 16px; }
+.logo--text { font-size: clamp(2.4rem, 12vw, 3.6rem); line-height: 1; letter-spacing: -0.02em; color: var(--accent); }
+.banner {
+  display: inline-block; margin-bottom: 4px; padding: 10px 18px; border-radius: 20px;
+  background: var(--highlight); color: var(--on-highlight); font-weight: 650; line-height: 1.35;
+  box-shadow: 0 6px 18px -8px color-mix(in srgb, var(--highlight) 80%, transparent);
+}
+.loading { color: var(--muted); }
+
+.logo__img { display: block; max-width: min(240px, 70%); max-height: 120px; margin: 0 auto; object-fit: contain; }
+.hero__photo, .menu-item__photo, .special__photo {
+  display: block; width: 100%; height: auto; object-fit: cover;
+  background: color-mix(in srgb, var(--muted) 15%, transparent);
+}
+.hero__photo { aspect-ratio: 4 / 3; margin: 0 0 20px; border-radius: 22px; }
+.menu-item__photo { aspect-ratio: 3 / 2; margin: 0 0 10px; border-radius: 14px; }
+.special__photo { aspect-ratio: 16 / 9; margin: 0 0 12px; border-radius: 10px; }
+
+.open-today { margin: 14px 0 0; color: var(--muted); font-size: 0.95rem; }
+.open-today__label { font-weight: 700; color: var(--accent); }
+.open-today--closed { font-weight: 700; color: var(--highlight); }
+
+.about p, .activities p { max-width: 34em; }
+.about h2 + p { font-size: 1.12rem; }
+
+/* Menus: dotted leaders between name and price */
+.menu-group + .menu-group { margin-top: 24px; }
+.menu-group__title { margin-bottom: 4px; color: var(--muted); font-size: 1.05rem; font-weight: 700; font-style: italic; }
+.menu-items, .tags, .specials__list { list-style: none; margin: 0; padding: 0; }
+.menu-item { padding: 14px 0; }
+.menu-item + .menu-item { border-top: 1px solid var(--line); }
+.menu-item__head { display: flex; align-items: baseline; gap: 8px; }
+.menu-item__name { flex: 1; display: flex; align-items: baseline; margin: 0; font: 650 1.05rem/1.35 var(--font-body); }
+.menu-item__name::after { content: ""; flex: 1 0 24px; margin-left: 8px; border-bottom: 2px dotted color-mix(in srgb, var(--muted) 55%, transparent); }
+.price { font-weight: 750; color: var(--accent); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.menu-item__desc { margin: 4px 0 0; color: var(--muted); font-size: 0.95rem; }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.tag { font-size: 0.78rem; line-height: 1.5; padding: 1px 9px; border-radius: 999px; background: color-mix(in srgb, var(--accent) 14%, transparent); color: var(--accent); }
+.tag--spicy, .tag--signature { background: color-mix(in srgb, var(--highlight) 16%, transparent); color: var(--highlight); }
+.coming-soon {
+  padding: 18px 20px; border: 2px dashed color-mix(in srgb, var(--accent) 40%, transparent); border-radius: 16px; text-align: center;
+  color: var(--accent); font: 700 1.1rem/1.4 var(--font-display);
+}
+
+/* Specials: ticket stubs with a coral edge */
+.specials__list { display: grid; gap: 14px; }
+.special { padding: 16px 18px; border-radius: 4px 16px 16px 4px; background: var(--surface); border-left: 5px solid var(--highlight); }
+.special__title { margin: 0 0 2px; }
+.special__when { margin: 0 0 6px; color: var(--highlight); font-weight: 700; font-size: 0.95rem; }
+.special__detail { color: var(--muted); }
+
+.button {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  min-height: 52px; padding: 12px 22px; border-radius: 999px;
+  background: var(--accent); color: var(--on-accent);
+  font: 700 1.05rem/1.2 var(--font-body); text-align: center; text-decoration: none;
+}
+.rating-badge { margin: 16px 0 0; font-weight: 700; text-align: center; }
+.hours { width: 100%; border-collapse: collapse; margin-top: 24px; font-variant-numeric: tabular-nums; font-size: 0.95rem; }
+.hours caption { text-align: left; padding-bottom: 8px; font: 800 1.15rem/1.2 var(--font-display); }
+.hours th, .hours td { text-align: left; padding: 9px 6px; border-bottom: 1px solid var(--line); }
+.hours th { font-weight: 600; }
+.hours thead th { color: var(--muted); font-size: 0.85rem; }
+.hours .is-today > * { background: color-mix(in srgb, var(--highlight) 14%, transparent); font-weight: 750; }
+.hours .is-today > :first-child { border-radius: 8px 0 0 8px; }
+.hours .is-today > :last-child { border-radius: 0 8px 8px 0; }
+
+/* WhatsApp: sticky at the bottom */
+.section.whatsapp {
+  position: sticky; bottom: 0; z-index: 5; margin: 0 calc(-1 * var(--gutter)); border-top: 0;
+  padding: 20px var(--gutter) calc(12px + env(safe-area-inset-bottom));
+  background: linear-gradient(transparent, var(--bg) 22px);
+}
+.button--whatsapp { background: var(--highlight); color: var(--on-highlight); box-shadow: 0 8px 22px -10px rgb(0 0 0 / 0.45); }
+.button--whatsapp::before {
+  content: ""; width: 22px; height: 22px; flex: none; background: currentColor;
+  --chat: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2a10 10 0 0 0-8.7 14.9L2 22l5.2-1.3A10 10 0 1 0 12 2z'/%3E%3C/svg%3E");
+  -webkit-mask: var(--chat) center / contain no-repeat; mask: var(--chat) center / contain no-repeat;
+}
+
+/* Language switcher */
+.lang-switch {
+  position: absolute; top: 8px; right: var(--gutter); z-index: 2;
+  display: flex; gap: 4px; padding: 4px; border-radius: 999px;
+  background: color-mix(in srgb, var(--surface) 85%, transparent);
+  box-shadow: 0 2px 10px -4px rgb(0 0 0 / 0.3);
+}
+.section.lang-switch + .section { border-top: 0; }
+.lang-switch ~ .hero { padding-top: 68px; }
+.lang-switch__option {
+  min-width: 48px; min-height: 44px; padding: 0 10px; border: 0; border-radius: 999px; cursor: pointer;
+  background: transparent; color: var(--accent); font: 700 0.9rem/1 var(--font-body);
+}
+.lang-switch__option.is-current { background: var(--accent); color: var(--on-accent); }
+
+@media (min-width: 680px) {
+  .hero { margin: 0; border-radius: 0 0 28px 28px; }
+  .section.whatsapp { margin: 0; padding-inline: 0; }
+  .button--whatsapp { max-width: 420px; margin: 0 auto; }
+}
