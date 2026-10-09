@@ -11,12 +11,15 @@ import { parseTabs } from './csv.js';
 import { makeContext } from './content.js';
 import { hero } from './sections/hero.js';
 import { about } from './sections/about.js';
+import { cocktails, food } from './sections/menu.js';
 
 /** Page order. Each entry: [section id, builder(ctx) → html string ('' = omit)]. */
 export const SECTIONS = [
   ['hero', hero],
   ['about', about],
-  // cocktails, food, specials, activities, find-us, whatsapp — added by later tickets
+  ['cocktails', cocktails],
+  ['food', food],
+  // specials, activities, find-us, whatsapp — added by later tickets
 ];
 
 /**
