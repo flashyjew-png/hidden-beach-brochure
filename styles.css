@@ -1,121 +1,230 @@
-/* Hidden Beach brochure — mobile-first, rustic-tropical. Theme tokens live on :root. */
+/* Hidden Beach brochure — mobile-first, rustic-tropical (#9). Theme tokens live on :root. */
 :root {
-  --sand: #f4ead7;
-  --sand-deep: #e7d6b5;
-  --teal: #0f5c5c;
-  --teal-deep: #0a3f40;
-  --coral: #e8664a;
+  --sand: #efe2c8;
+  --sand-pale: #f8f0e0;
+  --teal: #0e4f51;
+  --coral: #d9472f;
+  --ink: #1d2a29;
 
   --bg: var(--sand);
-  --surface: #fbf5ea;
-  --text: #2b2420;
-  --muted: #6b5d50;
+  --surface: var(--sand-pale);
+  --text: var(--ink);
+  --muted: #5e5a4d;
+  --line: rgb(29 42 41 / 0.16);
   --accent: var(--teal);
   --highlight: var(--coral);
+  --on-accent: var(--sand-pale);
   --on-highlight: #fff;
+  --sky-top: #f7ead2;
+  --sky-low: #f4b48a;
+  --sun: #ee6a45;
+  --sea: #1d6a6a;
+  --sea-deep: var(--teal);
 
-  --radius: 14px;
   --gutter: 16px;
   --max: 640px;
   --font-body: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans Thai", sans-serif;
-  --font-display: Georgia, "Times New Roman", serif;
+  --font-display: ui-rounded, "SF Pro Rounded", "Arial Rounded MT Bold", "Nunito", "Noto Sans Thai", system-ui, sans-serif;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #11201f;
-    --surface: #182b2a;
-    --text: #f1e7d6;
-    --muted: #b7a994;
-    --accent: #6cc3bb;
-    --highlight: #f0805f;
-    --on-highlight: #1a0f0b;
+    --bg: #0c1e20;
+    --surface: #13292b;
+    --text: #efe2c8;
+    --muted: #b3ab97;
+    --line: rgb(239 226 200 / 0.14);
+    --accent: #7ccfc4;
+    --highlight: #ff8566;
+    --on-accent: #0c1e20;
+    --on-highlight: #240b05;
+    --sky-top: #0f3236;
+    --sky-low: #8a3f33;
+    --sun: #f07a52;
+    --sea: #11403f;
+    --sea-deep: #082022;
   }
 }
 
 *, *::before, *::after { box-sizing: border-box; }
-
 html { -webkit-text-size-adjust: 100%; }
 
 body {
   margin: 0;
   background: var(--bg);
   color: var(--text);
-  font: 16px/1.55 var(--font-body);
+  font: 17px/1.6 var(--font-body);
+  overflow-wrap: anywhere;
 }
 
 main {
   max-width: var(--max);
   margin: 0 auto;
-  padding: 0 var(--gutter) 48px;
+  padding: 0 var(--gutter);
 }
 
-.section { padding: 28px 0; }
-.section + .section { border-top: 1px solid color-mix(in srgb, var(--muted) 25%, transparent); }
+.section { padding: 32px 0; }
+.section + .section { border-top: 1px solid var(--line); }
 
-h1, h2, h3 { font-family: var(--font-display); line-height: 1.2; margin: 0 0 12px; }
-h2 { color: var(--accent); font-size: 1.5rem; }
+h1, h2, h3, h4 { margin: 0 0 12px; line-height: 1.2; }
+h1, h2, h3 { font-family: var(--font-display); font-weight: 800; }
+h2 { color: var(--accent); font-size: 1.65rem; letter-spacing: -0.01em; }
+h3 { font-size: 1.15rem; }
 p { margin: 0 0 12px; }
+p:last-child { margin-bottom: 0; }
+a:focus-visible, button:focus-visible { outline: 3px solid var(--highlight); outline-offset: 3px; }
 
-/* Hero */
-.hero { padding-top: 40px; text-align: center; }
-.logo--text { font-size: clamp(2.2rem, 10vw, 3.2rem); color: var(--accent); letter-spacing: 0.01em; }
+/* Hero: a CSS sunset over the sea stands in until Jake adds a hero photo. */
+.hero {
+  position: relative;
+  margin: 0 calc(-1 * var(--gutter));
+  padding: 44px var(--gutter) 28px;
+  text-align: center;
+  background:
+    radial-gradient(circle at 50% 100%, var(--sun) 0 52px, transparent 53px) 0 0 / 100% 168px no-repeat,
+    linear-gradient(var(--sky-top), var(--sky-low) 168px, var(--sea) 168px, var(--sea-deep) 236px, var(--bg) 236px);
+}
+.hero::before {
+  /* light on the water under the sun */
+  content: "";
+  position: absolute;
+  top: 168px; left: 50%;
+  width: 150px; height: 64px;
+  transform: translateX(-50%);
+  background: repeating-linear-gradient(transparent 0 7px, color-mix(in srgb, var(--sun) 55%, transparent) 7px 10px);
+  clip-path: polygon(30% 0, 70% 0, 100% 100%, 0 100%);
+  opacity: 0.7;
+}
+.hero > * { position: relative; }
+.hero:has(.hero__photo) { background: none; padding-top: 24px; }
+.hero:has(.hero__photo)::before { display: none; }
+
+.hero > .logo { margin-bottom: 152px; }
+.logo--text {
+  font-size: clamp(2.4rem, 12vw, 3.6rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--accent);
+}
+.hero:has(.hero__photo) > .logo { margin-bottom: 16px; }
 .banner {
   display: inline-block;
-  margin: 8px 0 0;
-  padding: 8px 14px;
-  border-radius: 999px;
+  margin: 0 0 4px;
+  padding: 10px 18px;
+  border-radius: 20px;
   background: var(--highlight);
   color: var(--on-highlight);
-  font-weight: 600;
+  font-weight: 650;
+  line-height: 1.35;
+  box-shadow: 0 6px 18px -8px color-mix(in srgb, var(--highlight) 80%, transparent);
 }
 .loading { color: var(--muted); }
 
 /* Photos (#4): only rendered when a photo cell is filled */
-.logo--image { margin: 0 0 12px; }
 .logo__img { display: block; max-width: min(240px, 70%); max-height: 120px; margin: 0 auto; object-fit: contain; }
 .hero__photo, .menu-item__photo, .special__photo {
   display: block; width: 100%; height: auto; object-fit: cover;
-  border-radius: 12px; background: color-mix(in srgb, var(--muted) 15%, transparent);
+  background: color-mix(in srgb, var(--muted) 15%, transparent);
 }
-.hero__photo { aspect-ratio: 4 / 3; margin: 0 0 16px; }
-.menu-item__photo, .special__photo { aspect-ratio: 16 / 9; margin: 0 0 8px; }
+.hero__photo { aspect-ratio: 4 / 3; margin: 0 0 20px; border-radius: 22px; }
+.menu-item__photo { aspect-ratio: 3 / 2; margin: 0 0 10px; border-radius: 14px; }
+.special__photo { aspect-ratio: 16 / 9; margin: 0 0 12px; border-radius: 10px; }
 
-/* About */
-.about p { color: var(--text); }
+.open-today { margin: 14px 0 0; color: var(--muted); font-size: 0.95rem; }
+.open-today__label { font-weight: 700; color: var(--accent); }
+.open-today--closed { font-weight: 700; color: var(--highlight); }
 
-/* Menus (cocktails, food) */
-.menu-group + .menu-group { margin-top: 20px; }
-.menu-group__title { font-size: 1.1rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+/* About + activities: comfortable reading measure */
+.about p, .activities p { max-width: 34em; }
+.about p:first-child, .about h2 + p { font-size: 1.12rem; }
+
+/* Menus: chalkboard-style dotted leaders between name and price */
+.menu-group + .menu-group { margin-top: 24px; }
+.menu-group__title { margin-bottom: 4px; color: var(--muted); font-size: 1.05rem; font-weight: 700; font-style: italic; }
 .menu-items { list-style: none; margin: 0; padding: 0; }
-.menu-item { padding: 10px 0; }
-.menu-item + .menu-item { border-top: 1px dashed color-mix(in srgb, var(--muted) 30%, transparent); }
-.menu-item__head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
-.menu-item__name { margin: 0; font: 600 1rem/1.3 var(--font-body); }
-.price { font-weight: 700; color: var(--accent); white-space: nowrap; }
+.menu-item { padding: 14px 0; }
+.menu-item + .menu-item { border-top: 1px solid var(--line); }
+.menu-item__head { display: flex; align-items: baseline; gap: 8px; }
+.menu-item__name { flex: 1; display: flex; align-items: baseline; margin: 0; font: 650 1.05rem/1.35 var(--font-body); }
+.menu-item__name::after {
+  content: ""; flex: 1 0 24px; margin-left: 8px;
+  border-bottom: 2px dotted color-mix(in srgb, var(--muted) 55%, transparent);
+}
+.price { font-weight: 750; color: var(--accent); white-space: nowrap; font-variant-numeric: tabular-nums; }
 .menu-item__desc { margin: 4px 0 0; color: var(--muted); font-size: 0.95rem; }
-.tags { list-style: none; display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0 0; padding: 0; }
-.tag { font-size: 0.75rem; padding: 2px 8px; border-radius: 999px; background: color-mix(in srgb, var(--accent) 15%, transparent); color: var(--accent); }
-.tag--spicy { background: color-mix(in srgb, var(--highlight) 18%, transparent); color: var(--highlight); }
-.coming-soon { font-style: italic; color: var(--muted); }
+.tags { list-style: none; display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0 0; padding: 0; }
+.tag {
+  font-size: 0.78rem; line-height: 1.5; padding: 1px 9px; border-radius: 999px;
+  background: color-mix(in srgb, var(--accent) 14%, transparent); color: var(--accent);
+}
+.tag--spicy, .tag--signature { background: color-mix(in srgb, var(--highlight) 16%, transparent); color: var(--highlight); }
+.coming-soon {
+  padding: 18px 20px; border: 2px dashed color-mix(in srgb, var(--accent) 40%, transparent); border-radius: 16px;
+  color: var(--accent); font: 700 1.1rem/1.4 var(--font-display); text-align: center;
+}
 
-/* Find us + WhatsApp (#6) — basic layout; polish in #9 */
-.open-today { margin: 12px 0 0; color: var(--muted); }
-.open-today__label { font-weight: 600; color: var(--text); }
-.button { display: inline-block; padding: 12px 18px; border-radius: 999px; background: var(--accent); color: var(--surface); font-weight: 600; text-decoration: none; }
-.rating-badge { display: inline-block; margin: 12px 0; font-weight: 600; }
-.hours { width: 100%; border-collapse: collapse; margin-top: 12px; }
-.hours caption { text-align: left; font-weight: 600; padding-bottom: 6px; }
-.hours th, .hours td { text-align: left; padding: 6px 4px; }
-.hours .is-today { font-weight: 700; }
-.whatsapp { text-align: center; }
+/* Specials & events: ticket stubs with a coral edge */
+.specials__list { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+.special {
+  padding: 16px 18px; border-radius: 4px 16px 16px 4px;
+  background: var(--surface); border-left: 5px solid var(--highlight);
+}
+.special__title { margin: 0 0 2px; }
+.special__when { margin: 0 0 6px; color: var(--highlight); font-weight: 700; font-size: 0.95rem; }
+.special__detail { color: var(--muted); }
+
+/* Find us */
+.button {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  min-height: 52px; padding: 12px 22px; border-radius: 999px;
+  background: var(--accent); color: var(--on-accent);
+  font: 700 1.05rem/1.2 var(--font-body); text-align: center; text-decoration: none;
+}
+.button--maps { width: 100%; }
+.rating-badge { display: block; margin: 16px 0 0; font-weight: 700; text-align: center; color: var(--text); }
+.hours { width: 100%; border-collapse: collapse; margin-top: 24px; font-variant-numeric: tabular-nums; font-size: 0.95rem; }
+.hours caption { text-align: left; padding-bottom: 8px; font: 800 1.15rem/1.2 var(--font-display); }
+.hours th, .hours td { text-align: left; padding: 9px 6px; border-bottom: 1px solid var(--line); }
+.hours thead th { color: var(--muted); font-weight: 600; font-size: 0.85rem; }
+.hours th[scope="row"] { font-weight: 600; }
+.hours .is-today > * { background: color-mix(in srgb, var(--highlight) 14%, transparent); font-weight: 750; }
+.hours .is-today > :first-child { border-radius: 8px 0 0 8px; }
+.hours .is-today > :last-child { border-radius: 0 8px 8px 0; }
+
+/* WhatsApp: sticks to the bottom of the screen for the whole visit */
+.section.whatsapp {
+  position: sticky; bottom: 0; z-index: 5;
+  margin: 0 calc(-1 * var(--gutter));
+  padding: 20px var(--gutter) calc(12px + env(safe-area-inset-bottom));
+  border-top: 0;
+  background: linear-gradient(transparent, var(--bg) 22px);
+}
+.button--whatsapp { background: var(--highlight); color: var(--on-highlight); box-shadow: 0 8px 22px -10px rgb(0 0 0 / 0.45); }
+.button--whatsapp::before {
+  content: ""; width: 22px; height: 22px; flex: none; background: currentColor;
+  -webkit-mask: var(--chat) center / contain no-repeat; mask: var(--chat) center / contain no-repeat;
+  --chat: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2a10 10 0 0 0-8.7 14.9L2 22l5.2-1.3A10 10 0 1 0 12 2z'/%3E%3C/svg%3E");
+}
 
 /* Language switcher (#7): appears only once Thai or German text exists */
-.lang-switch { display: flex; justify-content: flex-end; gap: 6px; padding: 12px 0 0; }
+.lang-switch {
+  position: absolute; top: 8px; right: var(--gutter); z-index: 2;
+  display: flex; gap: 4px; padding: 4px; border-radius: 999px;
+  background: color-mix(in srgb, var(--surface) 85%, transparent);
+  box-shadow: 0 2px 10px -4px rgb(0 0 0 / 0.3);
+}
+main { position: relative; }
 .section.lang-switch + .section { border-top: 0; }
 .lang-switch__option {
-  min-width: 44px; min-height: 36px; padding: 6px 10px;
-  border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent); border-radius: 999px;
-  background: transparent; color: var(--accent); font: 600 0.85rem/1 var(--font-body); cursor: pointer;
+  min-width: 48px; min-height: 44px; padding: 0 10px;
+  border: 0; border-radius: 999px;
+  background: transparent; color: var(--accent); font: 700 0.9rem/1 var(--font-body); cursor: pointer;
 }
-.lang-switch__option.is-current { background: var(--accent); color: var(--surface); border-color: var(--accent); }
+.lang-switch__option.is-current { background: var(--accent); color: var(--on-accent); }
+.lang-switch ~ .hero { padding-top: 68px; }
+
+@media (min-width: 680px) {
+  .hero { margin: 0; border-radius: 0 0 28px 28px; }
+  .section.whatsapp { margin: 0; padding-inline: 0; }
+  .button--whatsapp { max-width: 420px; margin: 0 auto; }
+}
