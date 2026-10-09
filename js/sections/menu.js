@@ -1,4 +1,5 @@
 import { esc, isShown, pick } from '../content.js';
+import { photo } from '../photo.js';
 
 // Cocktail and food menus from the Menu tab (spec #1, ticket #3).
 // `menu` column picks the section; show = yes rows only; grouped by category in
@@ -49,6 +50,7 @@ function item(row, lang) {
   const p = price(row.price);
   return (
     `<li class="menu-item">` +
+    photo(row.photo, name, 'menu-item__photo') +
     `<div class="menu-item__head"><h4 class="menu-item__name">${esc(name)}</h4>` +
     (p ? `<span class="price">${esc(p)}</span>` : '') +
     `</div>` +

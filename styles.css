@@ -71,6 +71,16 @@ p { margin: 0 0 12px; }
 }
 .loading { color: var(--muted); }
 
+/* Photos (#4): only rendered when a photo cell is filled */
+.logo--image { margin: 0 0 12px; }
+.logo__img { display: block; max-width: min(240px, 70%); max-height: 120px; margin: 0 auto; object-fit: contain; }
+.hero__photo, .menu-item__photo, .special__photo {
+  display: block; width: 100%; height: auto; object-fit: cover;
+  border-radius: 12px; background: color-mix(in srgb, var(--muted) 15%, transparent);
+}
+.hero__photo { aspect-ratio: 4 / 3; margin: 0 0 16px; }
+.menu-item__photo, .special__photo { aspect-ratio: 16 / 9; margin: 0 0 8px; }
+
 /* About */
 .about p { color: var(--text); }
 
