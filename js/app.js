@@ -31,6 +31,7 @@ async function main() {
   const lang = 'en';
   try {
     const csv = await loadTabs();
+    // `today` is the current instant; the renderer reads its weekday in Asia/Bangkok.
     paint(document, renderFromCsv(csv, { lang, today: new Date() }));
   } catch (err) {
     console.error('Brochure content failed to load', err);

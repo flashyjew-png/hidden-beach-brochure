@@ -14,6 +14,8 @@ import { about } from './sections/about.js';
 import { cocktails, food } from './sections/menu.js';
 import { specials } from './sections/specials.js';
 import { activities } from './sections/activities.js';
+import { findUs } from './sections/find-us.js';
+import { whatsapp } from './sections/whatsapp.js';
 
 /** Page order. Each entry: [section id, builder(ctx) → html string ('' = omit)]. */
 export const SECTIONS = [
@@ -23,7 +25,8 @@ export const SECTIONS = [
   ['food', food],
   ['specials', specials],
   ['activities', activities],
-  // find-us, whatsapp — added by later tickets
+  ['find-us', findUs],
+  ['whatsapp', whatsapp],
 ];
 
 /**
